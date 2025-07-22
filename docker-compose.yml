@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finance_db
+    ports:
+      - "5432:5432"
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finance_timescale
+    ports:
+      - "5433:5432"
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: python_service/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  graphql:
+    build:
+      context: .
+      dockerfile: graphql_api/Dockerfile
+    ports:
+      - "8002:8002"
+    depends_on:
+      - postgres
+
+  observability:
+    build:
+      context: .
+      dockerfile: observability/Dockerfile
+    ports:
+      - "8001:8001"
