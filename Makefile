@@ -1,10 +1,32 @@
-.PHONY: install lint test migrate run-graphql run-fastapi observability test-new-features validate-cicd performance-test
+.PHONY: install lint format test migrate run-graphql run-fastapi observability test-new-features validate-cicd performance-test
 
 install:
 	pip install -r requirements.txt
 
+format:
+	@echo "Formatting code with Black..."
+	@black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
+	@echo "Sorting imports with isort..."
+	@isort python_service/ graphql_api/ db_migration/ observability/ tests/
+	@echo "Fixing PEP 8 issues with autopep8..."
+	@find python_service/ graphql_api/ db_migration/ observability/ tests/ -name "*.py" -exec autopep8 --in-place --aggressive --aggressive --max-line-length=79 {} \;
+	@echo "Code formatting completed!"
+
 lint:
-	flake8 graphql_api python_service db_migration observability
+	@echo "Running linting checks..."
+	@echo "1. Running flake8..."
+	@flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count
+	@echo "2. Checking Black formatting..."
+	@black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
+	@echo "3. Checking import sorting..."
+	@isort --check-only python_service/ graphql_api/ db_migration/ observability/ tests/
+	@echo "4. Running type checking..."
+	@mypy python_service/ graphql_api/ db_migration/ observability/
+	@echo "5. Running security scan..."
+	@bandit -r python_service/ graphql_api/ db_migration/ observability/
+	@echo "6. Checking dependency vulnerabilities..."
+	@safety check
+	@echo "All linting checks passed!"
 
 test:
 	pytest
@@ -85,5 +107,11 @@ clean:
 install-dev:
 	@echo "Installing development dependencies..."
 	@pip install -r requirements.txt
-	@pip install black isort mypy bandit safety locust
+	@pip install black isort mypy bandit safety locust autopep8
 	@echo "Development dependencies installed!"
+
+setup-pre-commit:
+	@echo "Setting up pre-commit hooks..."
+	@pip install pre-commit
+	@pre-commit install
+	@echo "Pre-commit hooks installed!"

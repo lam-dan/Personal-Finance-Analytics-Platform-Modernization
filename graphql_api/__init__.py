@@ -1,1 +1,1 @@
-# GraphQL API package 
+# GraphQL API module

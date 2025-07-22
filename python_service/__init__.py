@@ -1,1 +1,1 @@
-# Python service package 
+# Python service module
