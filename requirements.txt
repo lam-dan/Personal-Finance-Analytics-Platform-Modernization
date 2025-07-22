@@ -22,7 +22,7 @@ kubernetes==28.1.0      # Kubernetes client
 # Code Quality and Security
 black==24.1.1           # Code formatting (updated version)
 isort==5.13.0           # Import sorting
-autopep8==2.3.2         # PEP 8 style formatting
+autopep8==2.0.4         # PEP 8 style formatting (compatible with flake8)
 mypy==1.8.0             # Type checking
 bandit==1.7.5           # Security linting
 safety==3.6.0           # Dependency vulnerability scanning (updated version)

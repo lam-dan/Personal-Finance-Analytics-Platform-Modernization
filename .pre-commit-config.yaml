@@ -31,8 +31,8 @@ repos:
         additional_dependencies: [types-requests]
         args: [python_service/, graphql_api/, db_migration/, observability/]
 
-  - repo: https://github.com/PyCQA/autopep8
-    rev: v2.3.2
-    hooks:
-      - id: autopep8
-        args: [--in-place, --aggressive, --aggressive, --max-line-length=79] 
+                - repo: https://github.com/PyCQA/autopep8
+                rev: v2.0.4
+                hooks:
+                  - id: autopep8
+                    args: [--in-place, --aggressive, --aggressive, --max-line-length=79] 
