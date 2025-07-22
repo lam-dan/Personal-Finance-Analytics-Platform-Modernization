@@ -3,7 +3,8 @@ Personal Finance Analytics Platform - GraphQL API
 
 This module defines the GraphQL schema for the personal finance analytics
 platform. It provides a unified interface for querying financial data
-including transactions and investments using GraphQL's type-safe query language.
+including transactions and investments using GraphQL's type-safe query
+language.
 
 The GraphQL API offers several advantages over REST:
 - Single endpoint for all queries

@@ -59,7 +59,8 @@ def get_transactions():
     Retrieve all financial transactions.
 
     Returns:
-        List[Dict]: List of transaction objects with id, amount, category, and date
+        List[Dict]: List of transaction objects with id, amount,
+        category, and date
     """
     logger.info("Fetching all transactions")
     return TRANSACTIONS
@@ -71,7 +72,8 @@ def get_investments():
     Retrieve all investment portfolio data.
 
     Returns:
-        List[Dict]: List of investment objects with id, asset, value, and last_updated
+        List[Dict]: List of investment objects with id, asset, value,
+        and last_updated
     """
     logger.info("Fetching all investments")
     return INVESTMENTS
@@ -93,7 +95,7 @@ def spending_trends(start_date: str, end_date: str) -> Dict[str, float]:
         HTTPException: If date format is invalid (400 Bad Request)
     """
     logger.info(
-        f"Calculating spending trends between {start_date} and {end_date}"
+        f"Calculating spending trends between {start_date} " f"and {end_date}"
     )
 
     # Validate and parse date inputs

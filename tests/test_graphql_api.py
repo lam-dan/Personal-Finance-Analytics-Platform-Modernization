@@ -29,7 +29,8 @@ import requests
 
 def test_graphql_transactions():
     """
-    Test the GraphQL transactions query to ensure it returns valid transaction data.
+    Test the GraphQL transactions query to ensure it returns valid
+    transaction data.
 
     This test:
     1. Starts the GraphQL service on port 8002
@@ -93,7 +94,8 @@ def test_graphql_transactions():
 
 def test_graphql_investments():
     """
-    Test the GraphQL investments query to ensure it returns valid investment data.
+    Test the GraphQL investments query to ensure it returns valid
+    investment data.
 
     This test:
     1. Starts the GraphQL service on port 8002

@@ -90,7 +90,8 @@ class AWSRDSMigration:
 
     def extract_transactions_from_rds(self) -> List[Dict[str, Any]]:
         """
-        Extract transaction data from AWS RDS with pagination and error handling.
+        Extract transaction data from AWS RDS with pagination and error
+        handling.
 
         Returns:
             List of transaction dictionaries
@@ -137,7 +138,7 @@ class AWSRDSMigration:
                 offset += limit
 
                 logger.info(
-                    f"Extracted {len(transactions)} transactions (batch)"
+                    f"Extracted {len(transactions)} transactions " f"(batch)"
                 )
 
             cursor.close()
@@ -223,7 +224,7 @@ class AWSRDSMigration:
             # Insert data with batch processing
             batch_size = 100
             for i in range(0, len(transactions), batch_size):
-                batch = transactions[i: i + batch_size]
+                batch = transactions[i : i + batch_size]
 
                 # Use executemany for batch inserts
                 insert_query = """

@@ -29,7 +29,8 @@ import requests
 
 def test_get_transactions():
     """
-    Test the /transactions endpoint to ensure it returns valid transaction data.
+    Test the /transactions endpoint to ensure it returns valid transaction
+    data.
 
     This test:
     1. Starts the FastAPI service on port 8000

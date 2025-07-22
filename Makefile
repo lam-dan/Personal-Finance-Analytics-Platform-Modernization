@@ -15,7 +15,7 @@ format:
 lint: format
 	@echo "Running linting checks..."
 	@echo "1. Running flake8..."
-	@flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count
+	@flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
 	@echo "2. Checking Black formatting..."
 	@black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "3. Checking import sorting..."

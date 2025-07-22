@@ -49,8 +49,8 @@ jobs:
     
     - name: Run linting checks
       run: |
-        echo "Running flake8..."
-        flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count
+                            echo "Running flake8..."
+                    flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
         
         echo "Checking Black formatting..."
         black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
