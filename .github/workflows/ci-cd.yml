@@ -165,11 +165,11 @@ jobs:
     
     - name: Build and test Docker images
       run: |
-        docker-compose build
-        docker-compose up -d
+        docker compose build
+        docker compose up -d
         sleep 30  # Wait for services to start
-        docker-compose ps
-        docker-compose logs
+        docker compose ps
+        docker compose logs
     
     - name: Test Docker services
       run: |
@@ -254,7 +254,7 @@ jobs:
     
     - name: Start services for performance testing
       run: |
-        docker-compose up -d
+        docker compose up -d
         sleep 30
     
     - name: Run performance tests
@@ -280,7 +280,7 @@ jobs:
     
     - name: Build and push Docker images
       run: |
-        docker-compose build
+        docker compose build
         docker tag personal-finance-analytics-platform-modernization-fastapi:latest ${{ env.DOCKER_REGISTRY }}/fastapi:latest
         docker tag personal-finance-analytics-platform-modernization-graphql:latest ${{ env.DOCKER_REGISTRY }}/graphql:latest
         docker tag personal-finance-analytics-platform-modernization-observability:latest ${{ env.DOCKER_REGISTRY }}/observability:latest
