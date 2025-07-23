@@ -1,4 +1,4 @@
--i https://pkgs.safetycli.com/repository/na-34c9c/project/personal-finance-analytics-platform-modernization/pypi/simple/
+
 fastapi==0.115.0
 strawberry-graphql[fastapi]==0.257.0
 uvicorn==0.27.1
