@@ -102,30 +102,15 @@ class GraphQLUser(HttpUser):
             """
         }
         
-        # Try both GraphQL endpoints (FastAPI and standalone GraphQL service)
-        endpoints = ["/graphql", "http://localhost:8002/graphql"]
-        
-        for endpoint in endpoints:
-            try:
-                with self.client.post(endpoint, json=query, catch_response=True) as response:
-                    if response.status_code == 200:
-                        data = response.json()
-                        if 'data' in data and 'transactions' in data['data']:
-                            response.success()
-                            return
-                        else:
-                            response.failure("Invalid GraphQL response")
-                    elif response.status_code == 404:
-                        # Try next endpoint
-                        continue
-                    else:
-                        response.failure(f"HTTP {response.status_code}")
-            except Exception as e:
-                # Try next endpoint
-                continue
-        
-        # If all endpoints fail, mark as failure
-        self.client.post("/graphql", json=query, catch_response=True).failure("All GraphQL endpoints failed")
+        with self.client.post("/graphql", json=query, catch_response=True) as response:
+            if response.status_code == 200:
+                data = response.json()
+                if 'data' in data and 'transactions' in data['data']:
+                    response.success()
+                else:
+                    response.failure("Invalid GraphQL response")
+            else:
+                response.failure(f"HTTP {response.status_code}")
     
     @task(2)  # Medium frequency
     def query_investments(self):
@@ -147,30 +132,15 @@ class GraphQLUser(HttpUser):
             """
         }
         
-        # Try both GraphQL endpoints
-        endpoints = ["/graphql", "http://localhost:8002/graphql"]
-        
-        for endpoint in endpoints:
-            try:
-                with self.client.post(endpoint, json=query, catch_response=True) as response:
-                    if response.status_code == 200:
-                        data = response.json()
-                        if 'data' in data and 'investments' in data['data']:
-                            response.success()
-                            return
-                        else:
-                            response.failure("Invalid GraphQL response")
-                    elif response.status_code == 404:
-                        # Try next endpoint
-                        continue
-                    else:
-                        response.failure(f"HTTP {response.status_code}")
-            except Exception as e:
-                # Try next endpoint
-                continue
-        
-        # If all endpoints fail, mark as failure
-        self.client.post("/graphql", json=query, catch_response=True).failure("All GraphQL endpoints failed")
+        with self.client.post("/graphql", json=query, catch_response=True) as response:
+            if response.status_code == 200:
+                data = response.json()
+                if 'data' in data and 'investments' in data['data']:
+                    response.success()
+                else:
+                    response.failure("Invalid GraphQL response")
+            else:
+                response.failure(f"HTTP {response.status_code}")
 
 class ObservabilityUser(HttpUser):
     """

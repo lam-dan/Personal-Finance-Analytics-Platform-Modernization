@@ -170,11 +170,14 @@ pytest tests/ --cov=python_service --cov=graphql_api --cov=db_migration --cov=ob
 # Install performance testing tools
 pip install locust
 
-# Run performance tests
-locust -f performance_tests/locustfile.py --host=http://localhost:8000
+# Test FastAPI service (port 8000)
+locust -f performance_tests/locustfile.py --host=http://localhost:8000 --users=5 --spawn-rate=1 --run-time=30s --headless
 
-# Run with specific parameters
-locust -f performance_tests/locustfile.py --host=http://localhost:8000 --users=10 --spawn-rate=2 --run-time=60s --headless
+# Test GraphQL service (port 8002)
+locust -f performance_tests/graphql_locustfile.py --host=http://localhost:8002 --users=5 --spawn-rate=1 --run-time=30s --headless
+
+# Run comprehensive performance test (both services)
+make performance-test
 ```
 
 ## Development
