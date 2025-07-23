@@ -68,7 +68,7 @@ jobs:
         bandit -r python_service/ graphql_api/ db_migration/ observability/
         
         echo "Checking dependency vulnerabilities..."
-        safety check
+        safety scan
 
   # Unit and Integration Tests
   test:
@@ -147,7 +147,7 @@ jobs:
     - name: Run security scan
       run: |
         bandit -r python_service/ graphql_api/ db_migration/ observability/
-        safety check
+        safety scan
 
   # Docker Build and Test
   docker-build:
