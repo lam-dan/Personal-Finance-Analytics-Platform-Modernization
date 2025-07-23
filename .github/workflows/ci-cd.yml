@@ -78,10 +78,15 @@ jobs:
         echo "Running security scan..."
         bandit -r python_service/ graphql_api/ db_migration/ observability/
         
-        echo "Checking dependency vulnerabilities..."
-        echo "Safety scanning handled by dedicated workflow"
-
-  # Unit and Integration Tests
+                echo "Checking dependency vulnerabilities..."
+        
+    - name: Run Safety CLI to check for vulnerabilities
+      uses: pyupio/safety-action@v1
+      with:
+        api-key: ${{ secrets.SAFETY_API_KEY }}
+        args: --detailed-output
+        
+    # Unit and Integration Tests
   test:
     runs-on: ubuntu-latest
     needs: [lint]
