@@ -225,7 +225,8 @@ class AWSRDSMigration:
             batch_size = 100
             for i in range(0, len(transactions), batch_size):
                 # fmt: off
-                batch = transactions[i: i + batch_size]  # CI-compatible formatting
+                # CI-compatible formatting to prevent Black from changing
+                batch = transactions[i: i + batch_size]
                 # fmt: on
 
                 # Use executemany for batch inserts
