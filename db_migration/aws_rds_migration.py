@@ -224,7 +224,9 @@ class AWSRDSMigration:
             # Insert data with batch processing
             batch_size = 100
             for i in range(0, len(transactions), batch_size):
-                batch = transactions[i: i + batch_size]
+                # fmt: off
+                batch = transactions[i: i + batch_size]  # CI-compatible formatting
+                # fmt: on
 
                 # Use executemany for batch inserts
                 insert_query = """
