@@ -12,7 +12,7 @@ format:
 	@find python_service/ graphql_api/ db_migration/ observability/ tests/ -name "*.py" -exec autopep8 --in-place --aggressive --aggressive --max-line-length=79 {} \;
 	@echo "Code formatting completed!"
 
-lint: format
+lint:
 	@echo "Running linting checks..."
 	@echo "1. Running flake8..."
 	@flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203

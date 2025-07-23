@@ -3,9 +3,10 @@ import subprocess  # Used to run the migration script as a subprocess
 
 def test_migration_script_runs():
     """
-    Test that the data migration script runs and handles database connections properly.
-    This ensures the script exits cleanly and provides appropriate error messages
-    when databases are not available (common in CI environments).
+    Test that the data migration script runs and handles database connections
+    properly. This ensures the script exits cleanly and provides appropriate
+    error messages when databases are not available (common in CI
+    environments).
     """
     # Run the migration script as a subprocess and capture output
     result = subprocess.run(

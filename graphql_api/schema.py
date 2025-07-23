@@ -141,7 +141,7 @@ app = FastAPI(
 
 # Create the GraphQL router with the schema
 # This integrates the GraphQL schema with FastAPI
-graphql_app = GraphQLRouter(schema)
+graphql_app: GraphQLRouter = GraphQLRouter(schema)
 
 # Include the GraphQL router in the FastAPI app under the /graphql endpoint
 # This makes the GraphQL API available at http://localhost:8002/graphql

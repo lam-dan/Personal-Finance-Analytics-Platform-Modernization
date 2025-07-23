@@ -111,14 +111,14 @@ def spending_trends(start_date: str, end_date: str) -> Dict[str, float]:
     filtered = [
         t
         for t in TRANSACTIONS
-        if start <= datetime.fromisoformat(t["date"]) <= end
+        if start <= datetime.fromisoformat(str(t["date"])) <= end
     ]
 
     # Calculate spending totals by category
-    category_sum = {}
+    category_sum: Dict[str, float] = {}
     for tx in filtered:
-        category = tx["category"]
-        amount = tx["amount"]
-        category_sum[category] = category_sum.get(category, 0) + amount
+        category = str(tx["category"])
+        amount = float(str(tx["amount"]))
+        category_sum[category] = category_sum.get(category, 0.0) + amount
 
     return category_sum
