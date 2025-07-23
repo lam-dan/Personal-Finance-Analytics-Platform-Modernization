@@ -79,7 +79,7 @@ jobs:
         bandit -r python_service/ graphql_api/ db_migration/ observability/
         
         echo "Checking dependency vulnerabilities..."
-        safety scan --disable-telemetry
+        echo "Safety scanning handled by dedicated workflow"
 
   # Unit and Integration Tests
   test:
@@ -156,11 +156,8 @@ jobs:
         pip install bandit safety
     
     - name: Run security scan
-      env:
-        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
         bandit -r python_service/ graphql_api/ db_migration/ observability/
-        safety scan --disable-telemetry
 
   # Docker Build and Test
   docker-build:
