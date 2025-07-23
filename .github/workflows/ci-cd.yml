@@ -29,6 +29,7 @@ jobs:
     
     - name: Format code with Black
       run: |
+        echo "Black version: $(black --version)"
         black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
     
     - name: Sort imports with isort
@@ -53,6 +54,7 @@ jobs:
         flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
         
         echo "Checking Black formatting..."
+        echo "Black version: $(black --version)"
         black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
         
         echo "Checking import sorting..."
