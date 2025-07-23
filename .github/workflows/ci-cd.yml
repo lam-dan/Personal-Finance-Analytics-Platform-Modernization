@@ -67,8 +67,8 @@ jobs:
         echo "Running security scan..."
         bandit -r python_service/ graphql_api/ db_migration/ observability/
         
-        echo "Dependency vulnerabilities already addressed - skipping safety check"
-        echo "All vulnerable packages have been updated to secure versions"
+        echo "Checking dependency vulnerabilities..."
+        safety scan
 
   # Unit and Integration Tests
   test:
@@ -147,8 +147,7 @@ jobs:
     - name: Run security scan
       run: |
         bandit -r python_service/ graphql_api/ db_migration/ observability/
-        echo "Dependency vulnerabilities already addressed - skipping safety check"
-        echo "All vulnerable packages have been updated to secure versions"
+        safety scan
 
   # Docker Build and Test
   docker-build:
