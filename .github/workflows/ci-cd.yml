@@ -35,6 +35,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --cache-dir ~/.cache/pip -r requirements.txt
         pip install --cache-dir ~/.cache/pip types-psycopg2
+        pip install --cache-dir ~/.cache/pip safety
     
     - name: Format code with Black
       run: |
@@ -58,6 +59,8 @@ jobs:
         fi
     
     - name: Run linting checks
+      env:
+        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
         echo "Running flake8..."
         flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
@@ -74,6 +77,9 @@ jobs:
         
         echo "Running security scan..."
         bandit -r python_service/ graphql_api/ db_migration/ observability/
+        
+        echo "Checking dependency vulnerabilities..."
+        safety scan --disable-telemetry
 
   # Unit and Integration Tests
   test:
@@ -147,11 +153,14 @@ jobs:
     
     - name: Install security tools
       run: |
-        pip install bandit
+        pip install bandit safety
     
     - name: Run security scan
+      env:
+        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
         bandit -r python_service/ graphql_api/ db_migration/ observability/
+        safety scan --disable-telemetry
 
   # Docker Build and Test
   docker-build:
