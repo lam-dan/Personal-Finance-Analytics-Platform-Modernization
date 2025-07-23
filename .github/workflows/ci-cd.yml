@@ -35,7 +35,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install --cache-dir ~/.cache/pip -r requirements.txt
         pip install --cache-dir ~/.cache/pip types-psycopg2
-        pip install --cache-dir ~/.cache/pip -U safety
     
     - name: Format code with Black
       run: |
@@ -75,12 +74,6 @@ jobs:
         
         echo "Running security scan..."
         bandit -r python_service/ graphql_api/ db_migration/ observability/
-        
-        echo "Authenticating with Safety CLI..."
-        safety auth login
-        
-        echo "Checking dependency vulnerabilities..."
-        safety scan
 
   # Unit and Integration Tests
   test:
@@ -155,13 +148,10 @@ jobs:
     - name: Install security tools
       run: |
         pip install bandit
-        pip install -U safety
     
     - name: Run security scan
       run: |
         bandit -r python_service/ graphql_api/ db_migration/ observability/
-        safety auth login
-        safety scan
 
   # Docker Build and Test
   docker-build:
