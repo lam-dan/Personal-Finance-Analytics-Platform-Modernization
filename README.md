@@ -13,13 +13,13 @@ cd Personal-Finance-Analytics-Platform-Modernization
 ./setup.sh
 
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Run comprehensive tests (includes new features, CI/CD validation, and performance testing)
 make test
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ## Project Overview
@@ -223,6 +223,11 @@ docker-compose up -d postgres timescaledb
 python db_migration/migrate.py
 ```
 
+#### Start Databases
+```bash
+docker compose up -d postgres timescaledb
+```
+
 #### AWS RDS Migration (Enterprise)
 ```bash
 python db_migration/aws_rds_migration.py
@@ -245,10 +250,34 @@ python db_migration/aws_rds_migration.py
 
 ### Pipeline Stages
 1. **Code Quality** - Linting, formatting, type checking
-2. **Security Scanning** - Bandit, Safety vulnerability checks
+2. **Security Scanning** - Bandit code analysis + Safety dependency vulnerability scanning
 3. **Testing** - Unit, integration, and performance tests
-4. **Docker Build** - Multi-stage container builds
+4. **Docker Build** - Multi-stage container builds with Docker Compose V2
 5. **Deployment** - Kubernetes deployment with health checks
+
+### CI/CD Workflow
+The project uses a **comprehensive GitHub Actions workflow** (`.github/workflows/ci-cd.yml`) that includes:
+
+#### **Linting Job**
+- **Code formatting**: Black, isort, autopep8
+- **Linting**: flake8 with custom rules
+- **Type checking**: mypy with type stubs
+- **Security scanning**: Bandit for code vulnerabilities
+- **Dependency scanning**: Safety CLI for vulnerability detection
+
+#### **Testing Job**
+- **Unit tests**: pytest with coverage reporting
+- **Integration tests**: Database and service integration
+- **Performance tests**: Locust load testing
+
+#### **Docker Build Job**
+- **Multi-service builds**: FastAPI, GraphQL, Observability
+- **Docker Compose V2**: Modern container orchestration
+- **Service health checks**: Automated service validation
+
+#### **Security Job**
+- **Bandit scanning**: Code security analysis
+- **Comprehensive coverage**: All Python modules scanned
 
 ### Local Development
 ```bash
@@ -263,7 +292,6 @@ mypy python_service/ graphql_api/ db_migration/ observability/
 
 # Security scanning
 bandit -r python_service/ graphql_api/ db_migration/ observability/
-safety check
 ```
 
 ## Database Configuration
@@ -302,6 +330,14 @@ timescaledb:
 - **Automated CI/CD Validation** - Code quality, security scanning, and Docker build testing
 - **Enterprise Dependency Testing** - Validates AWS SDK, Kubernetes, and Docker dependencies
 
+### **CI/CD Pipeline Modernization**
+- **Unified GitHub Actions workflow** - Single comprehensive pipeline with all checks
+- **Safety dependency vulnerability scanning** - Official GitHub Action integration
+- **Bandit security scanning** - Code vulnerability detection
+- **Docker Compose V2** - Modern container orchestration
+- **Streamlined project structure** - Removed redundant configurations
+- **All vulnerable dependencies updated** - Secure versions of all packages
+
 ### **AWS RDS Integration**
 - Added AWS RDS connection configuration
 - Implemented enterprise-grade migration script
@@ -315,11 +351,14 @@ timescaledb:
 - Includes legacy data structures and business logic
 
 ### **CI/CD Pipeline Enhancement**
-- Comprehensive GitHub Actions workflow
-- Multi-stage testing (lint, test, security, performance)
-- Docker build and push automation
-- Kubernetes deployment with health checks
-- Code coverage and quality gates
+- **Comprehensive GitHub Actions workflow** with unified pipeline
+- **Multi-stage testing** (lint, test, security, performance)
+- **Docker Compose V2** integration for modern container orchestration
+- **Safety dependency vulnerability scanning** with official GitHub Action
+- **Bandit security scanning** for code vulnerabilities
+- **Automated code quality checks** (Black, isort, mypy, flake8)
+- **Kubernetes deployment** with health checks
+- **Code coverage and quality gates**
 
 ### **Performance Testing**
 - Locust-based load testing framework
@@ -329,10 +368,12 @@ timescaledb:
 - Performance metrics and error reporting
 
 ### **Security and Quality**
-- Security scanning (Bandit, Safety)
-- Code quality tools (Black, isort, mypy)
-- Type checking and linting
-- Dependency vulnerability scanning
+- **Bandit security scanning** for code vulnerabilities
+- **Safety dependency vulnerability scanning** with official GitHub Action
+- **Code quality tools** (Black, isort, mypy, flake8, autopep8)
+- **Type checking and linting** with comprehensive coverage
+- **Dependency vulnerability scanning** with real-time updates
+- **All vulnerable dependencies updated** to secure versions
 
 ### **Enterprise Features**
 - AWS X-Ray distributed tracing
@@ -345,6 +386,9 @@ timescaledb:
 - **Enhanced Makefile** - Comprehensive development commands
 - **Dependency management** - Fixed version conflicts and compatibility issues
 - **Error handling** - Graceful handling of missing tools and failed tests
+- **Streamlined CI/CD** - Single comprehensive workflow with all checks
+- **Modern Docker Compose** - V2 syntax for better performance
+- **Removed redundant configurations** - Clean project structure
 
 ## Troubleshooting
 
@@ -355,8 +399,8 @@ timescaledb:
 # Clean Docker cache
 docker system prune -a
 
-# Rebuild without cache
-docker-compose build --no-cache
+# Rebuild without cache (Docker Compose V2)
+docker compose build --no-cache
 ```
 
 #### Database Connection Issues
@@ -371,7 +415,7 @@ docker-compose logs postgres timescaledb
 #### Test Failures
 ```bash
 # Ensure databases are running
-docker-compose up -d postgres timescaledb
+docker compose up -d postgres timescaledb
 
 # Run tests with verbose output
 pytest tests/ -v -s
@@ -451,7 +495,7 @@ make clean
 make test              # Run comprehensive test suite
 make install-dev       # Install development dependencies
 make clean             # Clean up Docker containers and cache
-docker-compose up      # Start all services
+docker compose up      # Start all services
 
 # Individual testing
 make test-new-features # Test new features only
