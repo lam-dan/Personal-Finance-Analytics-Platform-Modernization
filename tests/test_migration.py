@@ -17,8 +17,14 @@ def test_migration_script_runs():
     if result.returncode != 0:
         # If it failed, it should be due to database connection issues
         # (which is expected in CI without running databases)
-        assert "Connection refused" in result.stderr or "connection" in result.stderr.lower()
-        assert "port 5432 failed" in result.stderr or "port 5433 failed" in result.stderr
+        assert (
+            "Connection refused" in result.stderr
+            or "connection" in result.stderr.lower()
+        )
+        assert (
+            "port 5432 failed" in result.stderr
+            or "port 5433 failed" in result.stderr
+        )
     else:
         # If it succeeded, it should have migrated data
         assert "Transactions migrated successfully" in result.stderr
