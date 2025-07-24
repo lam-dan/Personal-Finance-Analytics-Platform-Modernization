@@ -320,7 +320,7 @@ jobs:
     - name: Notify on success
       if: needs.deploy.result == 'success'
       run: |
-        echo "CI/CD Pipeline completed successfully! 🎉"
+        echo "CI/CD Pipeline completed successfully!"
         echo "All tests passed: linting, security, testing, performance"
         echo "Docker images deployed to GitHub Container Registry"
         # Add Slack/Teams notification here
@@ -328,6 +328,6 @@ jobs:
     - name: Notify on failure
       if: needs.deploy.result == 'failure'
       run: |
-        echo "CI/CD Pipeline failed! ❌"
+        echo "CI/CD Pipeline failed!"
         echo "Check the logs for details"
         # Add Slack/Teams notification here 
