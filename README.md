@@ -34,6 +34,7 @@ This project demonstrates a **FinTech modernization initiative** with the follow
 
 ### **Legacy Migration**
 - **Scala Legacy Service** (`legacy_scala_services/`) - Demonstrates legacy code patterns that need migration
+- **Scala-to-Python Conversions** (`scala_to_python_conversions.py`) - Comprehensive conversion guide with practical examples
 - **AWS RDS Migration** (`db_migration/aws_rds_migration.py`) - Enterprise-grade migration from AWS RDS to internal data store
 
 ### **Infrastructure**
@@ -133,7 +134,7 @@ mypy python_service/ graphql_api/ db_migration/ observability/
 bandit -r python_service/ graphql_api/ db_migration/ observability/
 
 # Dependency vulnerability check (safety)
-safety check
+safety scan
 
 # Docker build test
 docker-compose build --no-cache
@@ -327,6 +328,25 @@ timescaledb:
 
 ## Recent Improvements
 
+### **Scala-to-Python Conversion Guide**
+- **Comprehensive conversion examples** (`scala_to_python_conversions.py`) - Demonstrates all major Scala patterns converted to Python
+- **Top 10 Conversion Challenges** - Covers the most difficult Scala-to-Python conversion scenarios
+- **Practical financial data examples** - Shows real-world conversion scenarios with transaction processing
+- **Complete test coverage** (`tests/test_scala_conversions.py`) - Validates all conversion patterns work correctly
+- **Variable declarations** - `val`/`var` → Python mutable/immutable patterns
+- **Control flow** - Scala `if/else` expressions → Python ternary operators
+- **Functions** - Scala functions → Python functions with type hints
+- **Collections** - Scala `List.map/filter` → Python list comprehensions
+- **Pattern matching** - Scala `match/case` → Python `if/elif/else` and dictionaries
+- **Case classes** - Scala case classes → Python dataclasses
+- **Options** - Scala `Option` → Python `Optional` and `None` handling
+- **Collection methods** - Scala `map/filter/flatMap/reduce/groupBy` → Python equivalents
+- **Immutability** - Scala `val` → Python tuples, NamedTuples, and frozensets
+- **Advanced patterns** - Scala sealed traits → Python enums, companion objects → static methods
+- **Concurrency models** - Scala Futures/Akka → Python AsyncIO/threading
+- **Functional idioms** - Scala combinators → Python functools and manual implementations
+- **Custom extractors** - Scala unapply → Python regex and parsing patterns
+
 ### **Enhanced Testing Framework**
 - **Comprehensive `make test` command** - Tests new features, validates CI/CD pipeline, and runs performance tests
 - **Performance Testing Integration** - Locust-based load testing with realistic user scenarios
@@ -504,6 +524,7 @@ docker compose up      # Start all services
 make test-new-features # Test new features only
 make validate-cicd     # Validate CI/CD pipeline only
 make performance-test  # Run performance tests only
+make scala-conversions # Run Scala-to-Python conversion examples
 
 # Development
 ./setup.sh            # Complete environment setup

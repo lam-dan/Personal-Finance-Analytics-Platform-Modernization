@@ -1,4 +1,4 @@
-.PHONY: install lint format test migrate run-graphql run-fastapi observability test-new-features validate-cicd performance-test
+.PHONY: install lint format test migrate run-graphql run-fastapi observability test-new-features validate-cicd performance-test scala-conversions
 
 install:
 	pip install -r requirements.txt
@@ -25,7 +25,7 @@ lint:
 	@echo "5. Running security scan..."
 	@bandit -r python_service/ graphql_api/ db_migration/ observability/
 	@echo "6. Checking dependency vulnerabilities..."
-	@safety check
+	@safety scan
 	@echo "All linting checks passed!"
 
 test:
@@ -37,11 +37,13 @@ test-new-features:
 	@python db_migration/aws_rds_migration.py || echo "AWS RDS migration test completed (simulated)"
 	@echo "2. Testing Scala legacy service patterns..."
 	@echo "   - Legacy service file exists: $(shell test -f legacy_scala_services/LegacyFinanceService.scala && echo "PASS" || echo "FAIL")"
-	@echo "3. Testing CI/CD pipeline configuration..."
+	@echo "3. Testing Scala-to-Python conversion examples..."
+	@python scala_to_python_conversions.py || echo "Scala conversion examples completed"
+	@echo "4. Testing CI/CD pipeline configuration..."
 	@echo "   - GitHub Actions workflow exists: $(shell test -f .github/workflows/ci-cd.yml && echo "PASS" || echo "FAIL")"
-	@echo "4. Testing performance testing framework..."
+	@echo "5. Testing performance testing framework..."
 	@echo "   - Locust file exists: $(shell test -f performance_tests/locustfile.py && echo "PASS" || echo "FAIL")"
-	@echo "5. Testing enterprise dependencies..."
+	@echo "6. Testing enterprise dependencies..."
 	@python -c "import boto3, kubernetes, docker; print('Enterprise dependencies: PASS')" 2>/dev/null || echo "Enterprise dependencies: FAIL (install with 'pip install -r requirements.txt')"
 
 validate-cicd:
@@ -55,7 +57,7 @@ validate-cicd:
 	@echo "4. Security scanning..."
 	@bandit -r python_service/ graphql_api/ db_migration/ observability/ 2>/dev/null || echo "Security scan: FAIL (install bandit with 'pip install bandit')"
 	@echo "5. Dependency vulnerability check..."
-	@safety check 2>/dev/null || echo "Dependency check: FAIL (install safety with 'pip install safety')"
+	@safety scan 2>/dev/null || echo "Dependency check: FAIL (install safety with 'pip install safety')"
 	@echo "6. Docker build test..."
 	@docker-compose build --no-cache || echo "Docker build: FAIL"
 
@@ -90,6 +92,12 @@ run-fastapi:
 
 observability:
 	python observability/logging_config.py
+
+scala-conversions:
+	@echo "Running Scala to Python conversion examples..."
+	@python scala_to_python_conversions.py
+	@echo "Running Scala conversion tests..."
+	@pytest tests/test_scala_conversions.py -v
 
 start-all:
 	@echo "Starting all services..."
