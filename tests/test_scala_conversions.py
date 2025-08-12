@@ -7,6 +7,7 @@ and demonstrate the proper Scala-to-Python patterns.
 
 import functools
 import os
+
 # Import the conversion examples
 import sys
 from collections import defaultdict
@@ -15,9 +16,11 @@ from typing import Optional
 
 import pytest
 
-from scala_to_python_conversions import (ConversionExamples,
-                                         FinancialDataProcessor,
-                                         FinancialTransaction)
+from scala_to_python_conversions import (
+    ConversionExamples,
+    FinancialDataProcessor,
+    FinancialTransaction,
+)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
