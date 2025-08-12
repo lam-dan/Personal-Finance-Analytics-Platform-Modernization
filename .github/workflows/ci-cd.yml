@@ -42,7 +42,6 @@ jobs:
         echo "=== Tool Version Verification ==="
         echo "Black version: $(black --version)"
         echo "isort version: $(isort --version)"
-        echo "flake8 version: $(flake8 --version)"
         echo "mypy version: $(mypy --version)"
         echo "bandit version: $(bandit --version)"
         echo "autopep8 version: $(autopep8 --version)"
@@ -51,11 +50,9 @@ jobs:
         # Verify versions match requirements.txt
         EXPECTED_BLACK="black, 24.3.0"
         EXPECTED_ISORT="5.13.0"
-        EXPECTED_FLAKE8="7.0.0"
         
         ACTUAL_BLACK=$(black --version)
         ACTUAL_ISORT=$(isort --version | grep -o 'VERSION [0-9]\+\.[0-9]\+\.[0-9]\+' | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-        ACTUAL_FLAKE8=$(flake8 --version | head -n1 | grep -o '^[0-9]\+\.[0-9]\+\.[0-9]\+')
         
         if [[ "$ACTUAL_BLACK" != *"$EXPECTED_BLACK"* ]]; then
           echo "❌ Black version mismatch. Expected: $EXPECTED_BLACK, Got: $ACTUAL_BLACK"
@@ -64,11 +61,6 @@ jobs:
         
         if [[ "$ACTUAL_ISORT" != "$EXPECTED_ISORT" ]]; then
           echo "❌ isort version mismatch. Expected: $EXPECTED_ISORT, Got: $ACTUAL_ISORT"
-          exit 1
-        fi
-        
-        if [[ "$ACTUAL_FLAKE8" != "$EXPECTED_FLAKE8" ]]; then
-          echo "❌ flake8 version mismatch. Expected: $EXPECTED_FLAKE8, Got: $ACTUAL_FLAKE8"
           exit 1
         fi
         
