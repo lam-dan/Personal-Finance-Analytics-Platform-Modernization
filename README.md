@@ -4,6 +4,40 @@ A comprehensive financial analytics platform demonstrating modern Python archite
 
 > **Note**: Recent updates include code formatting improvements and CI/CD pipeline optimizations.
 
+## Development Setup
+
+### Code Formatting
+
+To prevent CI/CD formatting issues, ensure you have the correct tool versions:
+
+```bash
+# Install exact versions used by CI
+pip install black==24.3.0 isort==5.13.0 flake8==7.0.0
+
+# Run CI-compatible formatting
+make format-ci
+
+# Or use the development script directly
+./scripts/format.sh
+```
+
+### Pre-commit Hooks (Recommended)
+
+Install pre-commit hooks to automatically format code before each commit:
+
+```bash
+# Install pre-commit
+pip install pre-commit
+
+# Install the git hook scripts
+pre-commit install
+
+# Run against all files (optional)
+pre-commit run --all-files
+```
+
+This will automatically format your code before each commit, preventing formatting issues from reaching the CI.
+
 ## Quick Start
 
 ```bash

@@ -10,6 +10,10 @@ format:
 	@isort --profile black python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "Code formatting completed!"
 
+format-ci:
+	@echo "Running CI-compatible formatting..."
+	@./scripts/format.sh
+
 lint:
 	@echo "Running linting checks..."
 	@echo "1. Running flake8..."
