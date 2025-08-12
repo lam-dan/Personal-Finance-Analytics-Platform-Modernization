@@ -454,7 +454,7 @@ class TestConversionChallenges:
 
         # Test sliding windows
         def sliding(lst, size):
-            return [lst[i: i + size] for i in range(len(lst) - size + 1)]
+            return [lst[i : i + size] for i in range(len(lst) - size + 1)]
 
         windows = sliding(numbers, 2)
         assert windows == [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]]
