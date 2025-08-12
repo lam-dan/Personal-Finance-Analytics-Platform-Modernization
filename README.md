@@ -2,6 +2,8 @@
 
 A comprehensive financial analytics platform demonstrating modern Python architecture, AWS RDS migration, Scala legacy service replacement, and enterprise-grade DevOps practices.
 
+> **Note**: Recent updates include code formatting improvements and CI/CD pipeline optimizations.
+
 ## Quick Start
 
 ```bash
