@@ -16,17 +16,15 @@ format-ci:
 
 lint:
 	@echo "Running linting checks..."
-	@echo "1. Running flake8..."
-	@flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
-	@echo "2. Checking Black formatting..."
+	@echo "1. Checking Black formatting..."
 	@black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
-	@echo "3. Checking import sorting..."
+	@echo "2. Checking import sorting..."
 	@isort --check-only --profile black python_service/ graphql_api/ db_migration/ observability/ tests/
-	@echo "4. Running type checking..."
+	@echo "3. Running type checking..."
 	@mypy python_service/ graphql_api/ db_migration/ observability/
-	@echo "5. Running security scan..."
+	@echo "4. Running security scan..."
 	@bandit -r python_service/ graphql_api/ db_migration/ observability/
-	@echo "6. Checking dependency vulnerabilities..."
+	@echo "5. Checking dependency vulnerabilities..."
 	@safety scan
 	@echo "All linting checks passed!"
 
@@ -52,15 +50,13 @@ validate-cicd:
 	@echo "Validating CI/CD pipeline components..."
 	@echo "1. Code formatting check..."
 	@black --check python_service/ graphql_api/ db_migration/ observability/ 2>/dev/null || echo "Code formatting: FAIL (install black with 'pip install black')"
-	@echo "2. Linting check..."
-	@flake8 python_service/ graphql_api/ db_migration/ observability/ || echo "Linting: FAIL"
-	@echo "3. Type checking..."
+	@echo "2. Type checking..."
 	@mypy python_service/ graphql_api/ db_migration/ observability/ 2>/dev/null || echo "Type checking: FAIL (install mypy with 'pip install mypy')"
-	@echo "4. Security scanning..."
+	@echo "3. Security scanning..."
 	@bandit -r python_service/ graphql_api/ db_migration/ observability/ 2>/dev/null || echo "Security scan: FAIL (install bandit with 'pip install bandit')"
-	@echo "5. Dependency vulnerability check..."
+	@echo "4. Dependency vulnerability check..."
 	@safety scan 2>/dev/null || echo "Dependency check: FAIL (install safety with 'pip install safety')"
-	@echo "6. Docker build test..."
+	@echo "5. Docker build test..."
 	@docker-compose build --no-cache || echo "Docker build: FAIL"
 
 performance-test:

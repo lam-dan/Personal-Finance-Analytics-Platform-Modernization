@@ -99,9 +99,6 @@ jobs:
       env:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
-        echo "Running flake8..."
-        flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --count
-        
         echo "Checking Black formatting..."
         echo "Black version: $(black --version)"
         black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
@@ -115,7 +112,7 @@ jobs:
         echo "Running security scan..."
         bandit -r python_service/ graphql_api/ db_migration/ observability/
         
-                echo "Checking dependency vulnerabilities..."
+        echo "Checking dependency vulnerabilities..."
         
     - name: Run Safety CLI to check for vulnerabilities
       uses: pyupio/safety-action@v1

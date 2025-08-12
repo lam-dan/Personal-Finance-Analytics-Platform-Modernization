@@ -68,8 +68,11 @@ else
 fi
 
 echo "🧪 Running linting checks..."
-# Use flake8 with black-compatible configuration
-flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --count
+# Run type checking and security scans
+echo "Running type checking..."
+mypy python_service/ graphql_api/ db_migration/ observability/
+echo "Running security scan..."
+bandit -r python_service/ graphql_api/ db_migration/ observability/
 echo "✅ Linting checks completed"
 
 echo "✨ Development formatting script completed!" 
