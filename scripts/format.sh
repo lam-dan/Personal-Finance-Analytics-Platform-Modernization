@@ -21,8 +21,8 @@ EXPECTED_ISORT="isort, version 5.13.0"
 EXPECTED_FLAKE8="7.0.0"
 
 ACTUAL_BLACK=$(black --version)
-ACTUAL_ISORT=$(isort --version)
-ACTUAL_FLAKE8=$(flake8 --version | head -n1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+ACTUAL_ISORT=$(isort --version | grep -o 'VERSION [0-9]\+\.[0-9]\+\.[0-9]\+' | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+ACTUAL_FLAKE8=$(flake8 --version | head -n1 | grep -o '^[0-9]\+\.[0-9]\+\.[0-9]\+')
 
 if [[ "$ACTUAL_BLACK" != *"$EXPECTED_BLACK"* ]]; then
     echo "❌ Black version mismatch. Expected: $EXPECTED_BLACK, Got: $ACTUAL_BLACK"
@@ -30,8 +30,8 @@ if [[ "$ACTUAL_BLACK" != *"$EXPECTED_BLACK"* ]]; then
     exit 1
 fi
 
-if [[ "$ACTUAL_ISORT" != *"$EXPECTED_ISORT"* ]]; then
-    echo "❌ isort version mismatch. Expected: $EXPECTED_ISORT, Got: $ACTUAL_ISORT"
+if [[ "$ACTUAL_ISORT" != "5.13.0" ]]; then
+    echo "❌ isort version mismatch. Expected: 5.13.0, Got: $ACTUAL_ISORT"
     echo "💡 Run: pip install isort==5.13.0"
     exit 1
 fi
@@ -52,7 +52,8 @@ echo "📦 Running isort..."
 isort python_service/ graphql_api/ db_migration/ observability/ tests/
 
 echo "🔧 Running autopep8..."
-find python_service/ graphql_api/ db_migration/ observability/ tests/ -name "*.py" -exec autopep8 --in-place --aggressive --aggressive --max-line-length=79 {} \;
+# Skip autopep8 for now due to Python 3.13 compatibility issues
+echo "⚠️  Skipping autopep8 due to Python 3.13 compatibility"
 
 echo "✅ Formatting complete!"
 
