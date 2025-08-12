@@ -7,9 +7,7 @@ format:
 	@echo "Formatting code with Black..."
 	@black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "Sorting imports with isort..."
-	@isort python_service/ graphql_api/ db_migration/ observability/ tests/
-	@echo "Fixing PEP 8 issues with autopep8..."
-	@find python_service/ graphql_api/ db_migration/ observability/ tests/ -name "*.py" -exec autopep8 --in-place --aggressive --aggressive --max-line-length=79 {} \;
+	@isort --profile black python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "Code formatting completed!"
 
 lint:
@@ -19,7 +17,7 @@ lint:
 	@echo "2. Checking Black formatting..."
 	@black --check --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "3. Checking import sorting..."
-	@isort --check-only python_service/ graphql_api/ db_migration/ observability/ tests/
+	@isort --check-only --profile black python_service/ graphql_api/ db_migration/ observability/ tests/
 	@echo "4. Running type checking..."
 	@mypy python_service/ graphql_api/ db_migration/ observability/
 	@echo "5. Running security scan..."

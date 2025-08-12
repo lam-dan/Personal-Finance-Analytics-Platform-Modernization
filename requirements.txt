@@ -4,6 +4,7 @@ strawberry-graphql[fastapi]==0.257.0
 uvicorn==0.27.1
 typing-extensions>=4.5.0
 psycopg2-binary==2.9.9  # For PostgreSQL/TimescaleDB in db_migration
+types-psycopg2==2.9.21.20250809
 loguru==0.7.2           # For structured logging in observability
 pytest==8.0.0           # For testing
 flake8==7.0.0           # For linting
