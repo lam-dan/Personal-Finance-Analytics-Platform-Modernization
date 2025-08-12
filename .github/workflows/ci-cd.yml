@@ -100,7 +100,7 @@ jobs:
         SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
       run: |
         echo "Running flake8..."
-        flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --max-line-length=79 --count --extend-ignore=E203
+        flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --count
         
         echo "Checking Black formatting..."
         echo "Black version: $(black --version)"

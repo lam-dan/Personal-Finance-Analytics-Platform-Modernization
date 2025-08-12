@@ -68,6 +68,8 @@ else
 fi
 
 echo "🧪 Running linting checks..."
-make lint
+# Use flake8 with black-compatible configuration
+flake8 python_service/ graphql_api/ db_migration/ observability/ tests/ --count
+echo "✅ Linting checks completed"
 
 echo "✨ Development formatting script completed!" 
