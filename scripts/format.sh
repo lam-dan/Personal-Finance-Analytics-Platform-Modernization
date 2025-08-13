@@ -46,11 +46,11 @@ fi
 echo "✅ Tool versions verified"
 
 # Run formatting tools in the same order as CI
-echo "🎨 Running Black..."
-black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
-
 echo "📦 Running isort..."
 isort python_service/ graphql_api/ db_migration/ observability/ tests/
+
+echo "🎨 Running Black..."
+black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
 
 echo "🔧 Running autopep8..."
 # Skip autopep8 for now due to Python 3.13 compatibility issues
