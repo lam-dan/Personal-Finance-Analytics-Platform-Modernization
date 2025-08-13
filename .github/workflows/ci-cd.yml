@@ -21,7 +21,11 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
+    - name: Clear pip cache
+      run: |
+        rm -rf ~/.cache/pip
+
     - name: Cache pip dependencies
       uses: actions/cache@v3
       with:
@@ -66,18 +70,14 @@ jobs:
         
         echo "✅ All tool versions match expected versions"
     
+    - name: Sort imports with isort
+      run: |
+        isort python_service/ graphql_api/ db_migration/ observability/ tests/
+
     - name: Format code with Black
       run: |
         echo "Black version: $(black --version)"
         black --line-length=79 python_service/ graphql_api/ db_migration/ observability/ tests/
-    
-    - name: Sort imports with isort
-      run: |
-        isort python_service/ graphql_api/ db_migration/ observability/ tests/
-    
-    - name: Fix PEP 8 issues with autopep8
-      run: |
-        find python_service/ graphql_api/ db_migration/ observability/ tests/ -name "*.py" -exec autopep8 --in-place --aggressive --aggressive --max-line-length=79 {} \;
     
     - name: Check for formatting changes
       run: |
