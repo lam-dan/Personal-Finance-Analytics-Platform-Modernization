@@ -5,6 +5,15 @@
 
 set -e
 
+# Activate virtual environment
+if [ -d ".venv" ]; then
+    echo "🐍 Activating virtual environment..."
+    source .venv/bin/activate
+else
+    echo "❌ Error: Virtual environment '.venv' not found. Please create it first."
+    exit 1
+fi
+
 echo "🔧 Running development formatting script..."
 echo "This will format your code to match the CI environment exactly."
 
