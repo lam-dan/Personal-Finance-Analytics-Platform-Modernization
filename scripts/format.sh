@@ -70,6 +70,8 @@ fi
 
 echo "🧪 Running linting checks..."
 # Run type checking and security scans
+echo "Running flake8..."
+flake8 python_service/ graphql_api/ db_migration/ observability/ tests/
 echo "Running type checking..."
 mypy python_service/ graphql_api/ db_migration/ observability/
 echo "Running security scan..."
