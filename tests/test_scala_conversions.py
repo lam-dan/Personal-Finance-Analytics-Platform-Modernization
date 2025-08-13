@@ -459,7 +459,7 @@ class TestConversionChallenges:
         def sliding(lst, size):
             windows = []
             for i in range(len(lst) - size + 1):
-                windows.append(lst[i : i + size])
+                windows.append(lst[i: i + size])
             return windows
 
         windows = sliding(numbers, 2)
