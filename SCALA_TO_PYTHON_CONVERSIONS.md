@@ -546,6 +546,63 @@ class EmailExtractor:
 - **Scala**: `try/catch` → **Python**: `try/except`
 - **Scala**: `Failure(e)` → **Python**: `HTTPException` or custom exceptions
 
+- 1) Akka Actors — Message-Driven Concurrency
+import akka.actor.{Actor, ActorSystem, Props}
+import akka.pattern.ask
+import akka.util.Timeout
+import scala.concurrent.duration._
+import scala.concurrent.Future
+
+case object Run
+
+class Worker extends Actor {
+  def receive: Receive = {
+    case Run => sender() ! expensiveOperation()
+  }
+  def expensiveOperation(): Int = { Thread.sleep(1000); 42 }
+}
+
+object ActorExample extends App {
+  implicit val system  = ActorSystem("actor-system")
+  implicit val ec      = system.dispatcher
+  implicit val timeout = Timeout(2.seconds)
+
+  val worker  = system.actorOf(Props[Worker], "worker")
+  val resultF = (worker ? Run).mapTo[Int]
+
+  resultF.foreach(v => println(s"[ACTOR] result = $v"))
+  resultF.onComplete(_ => system.terminate())
+}
+
+Key points:
+- Actors own state and handle one message at a time.
+- ! = send, ? = ask with reply (async).
+- Avoids race conditions by eliminating shared memory.
+
+2) Akka Streams — Reactive Streams with Backpressure
+import akka.actor.ActorSystem
+import akka.stream.scaladsl.{Source, Flow, Sink}
+import scala.concurrent.duration._
+
+object StreamsExample extends App {
+  implicit val system = ActorSystem("streams-system")
+  implicit val ec     = system.dispatcher
+
+  def expensiveOperation(i: Long): String = { Thread.sleep(300); s"tick-$i -> 42" }
+
+  val source = Source.tick(0.seconds, 500.millis, ()).zipWithIndex.map(_._2)
+  val flow   = Flow[Long].map(expensiveOperation)
+  val sink   = Sink.foreach[String](s => println(s"[STREAM] $s"))
+
+  source.via(flow).take(5).runWith(sink).onComplete(_ => system.terminate())
+}
+
+Key points:
+- Source: emits elements (here, timed ticks).
+- Flow: transforms each element (expensiveOperation).
+- Sink: consumes elements (prints).
+- Backpressure built in — slow consumers automatically slow producers.
+
 ### **API Patterns**
 - **Scala**: Custom HTTP server → **Python**: FastAPI with automatic OpenAPI docs
 - **Scala**: Manual JSON serialization → **Python**: Automatic serialization with Pydantic
