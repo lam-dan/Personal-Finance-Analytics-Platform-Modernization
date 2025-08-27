@@ -342,11 +342,32 @@ def categorize_transaction(tx: FinancialTransaction) -> str:
 
 ## 4. Key Conversion Patterns
 
+This section summarizes key conversion patterns between Scala and Python across different domains.
+
 ### **Data Structures**
-- **Scala**: `case class` → **Python**: Pydantic models or dictionaries
+- **Scala**: `case class` → **Python**: Pydantic models, `dataclasses`, or dictionaries
 - **Scala**: `Map[String, String]` → **Python**: `Dict[str, str]`
 - **Scala**: `List[T]` → **Python**: `List[T]`
-- **Scala**: `BigDecimal` → **Python**: `Decimal` or `float`
+- **Scala**: `BigDecimal` → **Python**: `Decimal` for precision or `float` for simplicity
+
+### **API Patterns**
+- **Scala**: Custom HTTP server (e.g., Akka HTTP) → **Python**: FastAPI with automatic OpenAPI docs
+- **Scala**: Manual JSON serialization (e.g., with Circe, Play JSON) → **Python**: Automatic serialization with Pydantic
+
+### **Database Access**
+- **Scala**: Custom database connection logic → **Python**: Standard libraries like `psycopg2` with connection pooling
+- **Scala**: Manual SQL queries → **Python**: Parameterized queries to prevent SQL injection
+
+### **Error Handling**
+- **Scala**: `try/catch` → **Python**: `try/except`
+- **Scala**: `Try`, `Either`, `Option` monads → **Python**: `try/except`, `None` checks, or custom result objects
+- **Scala**: `Failure(e)` → **Python**: `HTTPException` in FastAPI or custom exceptions
+
+### **Monitoring & Observability**
+- **Scala**: Custom logging → **Python**: Structured logging with libraries like `structlog`
+- **Scala**: Manual metrics instrumentation → **Python**: Prometheus metrics via decorators and standard libraries
+
+---
 
 ## 5. Top 10 Challenges in Scala → Python Conversion
 
@@ -465,6 +486,9 @@ for {
 ### **Challenge 7: Concurrency Models**
 ```scala
 // Scala: Futures, Akka Actors, reactive streams
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 Future { expensiveOperation() }
 ```
 ```python
@@ -486,10 +510,12 @@ async def async_operation():
 ```scala
 // Scala: Clean traits for multiple inheritance
 trait Logger { def log(msg: String): Unit }
-class App extends Logger
+class App extends Logger {
+  def log(msg: String): Unit = println(s"LOG: $msg")
+}
 ```
 ```python
-# Python: Mixins with MRO issues
+# Python: Mixins with potential MRO issues
 class Logger:
     def log(self, msg: str) -> None:
         print(f"LOG: {msg}")
@@ -506,7 +532,10 @@ list.sliding(2).toList
 list.groupBy(_ % 2)
 ```
 ```python
-# Python: Manual implementations
+# Python: Manual implementations or libraries like itertools
+from collections import defaultdict
+
+lst = [1, 2, 3, 4]
 indexed = list(enumerate(lst))
 windows = [lst[i:i+2] for i in range(len(lst)-1)]
 grouped = defaultdict(list)
@@ -516,106 +545,149 @@ for x in lst:
 
 ### **Challenge 10: Custom Extractors and unapply**
 ```scala
-// Scala: Custom extractors with unapply
+// Scala: Custom extractors with unapply for pattern matching
 object Email {
-  def unapply(str: String): Option[(String, String)] = ...
+  def unapply(str: String): Option[(String, String)] = {
+    val parts = str.split("@")
+    if (parts.length == 2) Some((parts(0), parts(1))) else None
+  }
 }
 "dan@gmail.com" match {
-  case Email(user, domain) => ...
+  case Email(user, domain) => println(s"User: $user, Domain: $domain")
 }
 ```
 ```python
-# Python: Custom parser or regex
+# Python: Custom parser or regex function
 import re
 
-class EmailExtractor:
-    @staticmethod
-    def unapply(email: str):
-        pattern = r'^([^@]+)@([^@]+)$'
-        match = re.match(pattern, email)
-        if match:
-            return match.groups()
-        return None
+def extract_email(email: str):
+    match = re.match(r'^([^@]+)@([^@]+)$', email)
+    if match:
+        return match.groups() # (user, domain)
+    return None
 ```
 
-### **Concurrency**
-- **Scala**: `Future[T]` → **Python**: `async/await` or synchronous FastAPI
-- **Scala**: `ExecutionContext` → **Python**: `asyncio` or threading
+---
 
-### **Error Handling**
-- **Scala**: `try/catch` → **Python**: `try/except`
-- **Scala**: `Failure(e)` → **Python**: `HTTPException` or custom exceptions
+## 6. Advanced Concurrency: Akka to Python
+
+This section provides conceptual Python equivalents for advanced Scala concurrency models like Akka Actors and Akka Streams.
 
 ### 1) Akka Actors — Message-Driven Concurrency
+
+**Scala: Akka Actor**
+```scala
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
-import scala.concurrent.Future
-
-case object Run
 
 class Worker extends Actor {
   def receive: Receive = {
-    case Run => sender() ! expensiveOperation()
+    case "Run" => sender() ! { Thread.sleep(1000); 42 }
   }
-  def expensiveOperation(): Int = { Thread.sleep(1000); 42 }
 }
 
-object ActorExample extends App {
-  implicit val system  = ActorSystem("actor-system")
-  implicit val ec      = system.dispatcher
-  implicit val timeout = Timeout(2.seconds)
+val system = ActorSystem("actor-system")
+val worker = system.actorOf(Props[Worker], "worker")
+implicit val timeout = Timeout(2.seconds)
+val resultF = (worker ? "Run").mapTo[Int]
+```
+**Key Points (Scala):**
+- Actors encapsulate state and behavior, communicating via asynchronous messages.
+- `!` (`tell`) is a fire-and-forget message send.
+- `?` (`ask`) sends a message and returns a `Future` for the reply.
+- Avoids race conditions by design, as an actor processes one message at a time.
 
-  val worker  = system.actorOf(Props[Worker], "worker")
-  val resultF = (worker ? Run).mapTo[Int]
+**Python: Conceptual Equivalent with `asyncio` and Queues**
+```python
+import asyncio
 
-  resultF.foreach(v => println(s"[ACTOR] result = $v"))
-  resultF.onComplete(_ => system.terminate())
-}
+async def expensive_operation():
+    await asyncio.sleep(1)
+    return 42
 
-Key points:
-- Actors own state and handle one message at a time.
-- ! = send, ? = ask with reply (async).
-- Avoids race conditions by eliminating shared memory.
+async def worker(queue: asyncio.Queue, result_queue: asyncio.Queue):
+    """Actor-like worker that processes messages from a queue."""
+    while True:
+        msg = await queue.get()
+        if msg == "Run":
+            result = await expensive_operation()
+            await result_queue.put(result)
+        queue.task_done()
+
+async def run_async_worker():
+    work_queue = asyncio.Queue()
+    result_queue = asyncio.Queue()
+    worker_task = asyncio.create_task(worker(work_queue, result_queue))
+
+    await work_queue.put("Run") # "ask" the worker
+    result = await result_queue.get() # Await the result
+    print(f"[ASYNCIO] result = {result}")
+    worker_task.cancel()
+```
+**Key Points (Python):**
+- `asyncio.Queue` serves as the actor's "mailbox".
+- An `async` function running in a `Task` serves as the actor's message-processing loop.
+- This pattern achieves similar isolation and concurrency without direct shared memory.
 
 ### 2) Akka Streams — Reactive Streams with Backpressure
+
+**Scala: Akka Streams**
+```scala
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Source, Flow, Sink}
 import scala.concurrent.duration._
 
-object StreamsExample extends App {
-  implicit val system = ActorSystem("streams-system")
-  implicit val ec     = system.dispatcher
+implicit val system = ActorSystem("streams-system")
+val source = Source.tick(0.seconds, 500.millis, ()).zipWithIndex.map(_._2)
+val flow   = Flow[Long].map(i => { Thread.sleep(300); s"tick-$i -> 42" })
+val sink   = Sink.foreach[String](s => println(s"[STREAM] $s"))
 
-  def expensiveOperation(i: Long): String = { Thread.sleep(300); s"tick-$i -> 42" }
+source.via(flow).take(5).runWith(sink)
+```
+**Key Points (Scala):**
+- **Source**: Emits elements (e.g., timed ticks).
+- **Flow**: Transforms elements.
+- **Sink**: Consumes elements.
+- **Backpressure** is a core feature: slow consumers automatically slow down producers.
 
-  val source = Source.tick(0.seconds, 500.millis, ()).zipWithIndex.map(_._2)
-  val flow   = Flow[Long].map(expensiveOperation)
-  val sink   = Sink.foreach[String](s => println(s"[STREAM] $s"))
+**Python: Conceptual Equivalent with Async Generators**
+```python
+import asyncio
 
-  source.via(flow).take(5).runWith(sink).onComplete(_ => system.terminate())
-}
+async def source_generator():
+    """Asynchronously yields ticks every 500ms, acting as a Source."""
+    i = 0
+    while True:
+        yield i
+        i += 1
+        await asyncio.sleep(0.5)
 
-Key points:
-- Source: emits elements (here, timed ticks).
-- Flow: transforms each element (expensiveOperation).
-- Sink: consumes elements (prints).
-- Backpressure built in — slow consumers automatically slow producers.
+async def run_async_stream():
+    source = source_generator()
+    
+    # `async for` consumes the stream, providing natural backpressure
+    i = 0
+    async for tick in source:
+        # Flow operation
+        await asyncio.sleep(0.3) 
+        result = f"tick-{tick} -> 42"
+        # Sink operation
+        print(f"[ASYNC GEN] {result}")
+        
+        i += 1
+        if i >= 5: # take(5)
+            break
+```
+**Key Points (Python):**
+- An `async def` function with `yield` creates an async generator (Source).
+- The `async for` loop consumes items one at a time, pulling them from the source.
+- This pull-based model provides **natural backpressure**: the source only produces a new item when the consumer is ready for it.
 
-### **API Patterns**
-- **Scala**: Custom HTTP server → **Python**: FastAPI with automatic OpenAPI docs
-- **Scala**: Manual JSON serialization → **Python**: Automatic serialization with Pydantic
+---
 
-### **Database Access**
-- **Scala**: Custom database connection → **Python**: `psycopg2` with connection pooling
-- **Scala**: Manual SQL queries → **Python**: Parameterized queries with proper injection protection
-
-### **Monitoring & Observability**
-- **Scala**: Custom logging → **Python**: Structured logging with Prometheus metrics
-- **Scala**: Manual metrics → **Python**: Automatic instrumentation with decorators
-
-## 5. Testing Framework
+## 7. Testing Framework
 
 ### **Test File**: `tests/test_scala_conversions.py`
 
@@ -641,7 +713,9 @@ Comprehensive test coverage for all conversion patterns:
 - Advanced Scala patterns converted
 ```
 
-## 6. Usage
+---
+
+## 8. Usage
 
 ### **Running Conversion Examples**
 ```bash
@@ -664,7 +738,9 @@ make test-new-features
 make test
 ```
 
-## 7. Benefits of Python Conversion
+---
+
+## 9. Benefits of Python Conversion
 
 ### **Developer Experience**
 - **Automatic API documentation** with FastAPI
@@ -690,7 +766,9 @@ make test
 - **Security scanning** with bandit
 - **Dependency vulnerability** checking with safety
 
-## 8. Summary
+---
+
+## 10. Summary
 
 The Personal Finance Analytics Platform demonstrates a **complete Scala-to-Python modernization** with:
 
