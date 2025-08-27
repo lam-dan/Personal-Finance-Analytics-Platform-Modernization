@@ -546,7 +546,7 @@ class EmailExtractor:
 - **Scala**: `try/catch` → **Python**: `try/except`
 - **Scala**: `Failure(e)` → **Python**: `HTTPException` or custom exceptions
 
-- 1) Akka Actors — Message-Driven Concurrency
+### 1) Akka Actors — Message-Driven Concurrency
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
@@ -579,7 +579,7 @@ Key points:
 - ! = send, ? = ask with reply (async).
 - Avoids race conditions by eliminating shared memory.
 
-2) Akka Streams — Reactive Streams with Backpressure
+### 2) Akka Streams — Reactive Streams with Backpressure
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Source, Flow, Sink}
 import scala.concurrent.duration._
